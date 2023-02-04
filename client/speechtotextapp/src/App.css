@@ -51,7 +51,7 @@
   color: white;
   border: none;
   font-weight: 600;
-  padding: 10px 60px;
+  padding: 10px 50px;
   cursor: pointer;
   transition: all 0.3s ease;
  
@@ -61,7 +61,17 @@
   color: white;
   border: none;
   font-weight: 600;
-  padding: 10px 60px;
+  padding: 10px 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+ 
+}
+.reset_button {
+  background-color: rgba(222, 255, 32, 0.938);
+  color: rgb(12, 0, 0);
+  border: none;
+  font-weight: 600;
+  padding: 10px 50px;
   cursor: pointer;
   transition: all 0.3s ease;
  
@@ -79,6 +89,14 @@
 }
 
 .stop_button:active {
+  transform: scale(0.9);
+  background-color: lightblue;
+}
+.reset_button:hover {
+  transform: scale(1.2);
+}
+
+.reset_button:active {
   transform: scale(0.9);
   background-color: lightblue;
 }

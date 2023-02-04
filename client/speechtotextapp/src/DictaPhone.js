@@ -1,6 +1,7 @@
 /** @format */
 
-import React,{useState} from "react";
+import React,{useState,useRef} from "react";
+import axios from './axios'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -10,9 +11,10 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 const Dictaphone = () => {
     const [hindiText, setHindiText] = useState('');
+    const transcriptRef = useRef();
   const {
     transcript,
-    listening,
+   
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
@@ -20,21 +22,36 @@ const Dictaphone = () => {
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
-  const translateText = () => {
+  const translateText = async () => {
     SpeechRecognition.stopListening();
+    const transcript = {
+      transcript: transcriptRef.current.value,
+     
+    };
+
+    try {
+      await axios.post("/api/transcript", transcript);
+     
+    } catch (err) {
+      console.log(err);
+     
+    }
+  
+
    
     fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${transcript}`)
       .then(res => res.json())
       .then(data => setHindiText(data[0][0][0]))
       .catch(err => console.error(err));
   };
+
   return (
     <div>
       <Container maxWidth='sm'>
         <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>
           <div className='button_container'>
             <Stack spacing={3} direction='row'>
-              <p>Microphone: {listening ? "on" : "off"}</p>
+              
               <button
                 className='record_button'
                 onClick={SpeechRecognition.startListening}
@@ -47,7 +64,7 @@ const Dictaphone = () => {
               >
                 Stop
               </button>
-              <button onClick={resetTranscript}>Reset</button>
+              <button className="reset_button" onClick={resetTranscript}>Reset</button>
             </Stack>
           </div>
           <div style={{ paddingTop: 40 }}>
@@ -56,6 +73,7 @@ const Dictaphone = () => {
               cols={60}
               placeholder='Speech to text'
              defaultValue={transcript}
+             ref={transcriptRef}
             ></textarea>
           </div>
           <div style={{ paddingTop: 40 }}>
